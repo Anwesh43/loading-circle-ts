@@ -1,0 +1,10 @@
+const w : number = window.innerWidth
+const h : number = window.innerHeight
+const scGap : number = 0.05
+const scDiv : number = 0.51
+const strokeFactor : number = 0.05
+const sizeFactor : number = 0.51
+const foreColor : string = "#303F9F"
+const backColor : string = "#BDBDBD"
+const nodes : number = 5
+const parts : number = 2
