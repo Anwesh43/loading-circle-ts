@@ -211,3 +211,25 @@ class LoadingCircle {
         this.curr.startUpdating(cb)
     }
 }
+
+class Renderer {
+
+    animator : Animator = new Animator()
+    lc : LoadingCircle = new LoadingCircle()
+
+    render(context : CanvasRenderingContext2D) {
+        this.lc.draw(context)
+    }
+
+    handleTap(cb : Function) {
+        this.lc.startUpdating(() => {
+            this.animator.start(() => {
+                cb()
+                this.lc.update(() => {
+                    cb()
+                    this.animator.stop()
+                })
+            })
+        })
+    }
+}
