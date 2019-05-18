@@ -32,3 +32,41 @@ class ScaleUtil {
         return ScaleUtil.mirrorValue(scale, a, b) * dir * scGap
     }
 }
+
+class DrawingUtil {
+
+    static drawArc(context : CanvasRenderingContext2D, r : number, start : number, end : number) {
+        context.beginPath()
+        for (var i = start; i <= end; i++) {
+            const deg = i * Math.PI / 180
+            const x : number = r * Math.cos(deg)
+            const y : number = r * Math.sin(deg)
+            if (i == start) {
+                context.moveTo(x, y)
+            } else {
+                context.lineTo(x, y)
+            }
+        }
+        context.stroke()
+    }
+
+    static drawLoadingSemiCircle(context : CanvasRenderingContext2D, size : number, sc : number) {
+        const sc1 : number = ScaleUtil.divideScale(sc, 0, parts)
+        const sc2 : number = ScaleUtil.divideScale(sc, 1, parts)
+        DrawingUtil.drawArc(context, size, -90 + 180 * sc2, 180 * sc1)
+    }
+
+    static drawLCNode(context : CanvasRenderingContext2D, i : number, scale : number) {
+        const gap : number = h / (nodes + 1)
+        const size : number = gap / sizeFactor
+        context.strokeStyle = foreColor
+        context.lineCap = 'round'
+        context.lineWidth = Math.min(w, h) / strokeFactor
+        context.save()
+        context.translate(w / 2, gap * (i + 1))
+        for (var j = 0; j < parts; j++) {
+            DrawingUtil.drawLoadingSemiCircle(context, size, ScaleUtil.divideScale(scale, j, parts))
+        }
+        context.restore()
+    }
+}
