@@ -2,8 +2,8 @@ const w : number = window.innerWidth
 const h : number = window.innerHeight
 const scGap : number = 0.05
 const scDiv : number = 0.51
-const strokeFactor : number = 0.05
-const sizeFactor : number = 0.51
+const strokeFactor : number = 90
+const sizeFactor : number = 2.9
 const foreColor : string = "#303F9F"
 const backColor : string = "#BDBDBD"
 const nodes : number = 5
@@ -50,22 +50,23 @@ class DrawingUtil {
         context.stroke()
     }
 
-    static drawLoadingSemiCircle(context : CanvasRenderingContext2D, size : number, sc : number) {
+    static drawLoadingSemiCircle(context : CanvasRenderingContext2D, size : number, sc : number, sf : number) {
         const sc1 : number = ScaleUtil.divideScale(sc, 0, parts)
         const sc2 : number = ScaleUtil.divideScale(sc, 1, parts)
-        DrawingUtil.drawArc(context, size, -90 + 180 * sc2, 180 * sc1)
+        DrawingUtil.drawArc(context, size, -90 * sf + 180 * sc2, -90 * sf + 180 * sc1)
     }
 
     static drawLCNode(context : CanvasRenderingContext2D, i : number, scale : number) {
         const gap : number = h / (nodes + 1)
         const size : number = gap / sizeFactor
+
         context.strokeStyle = foreColor
         context.lineCap = 'round'
         context.lineWidth = Math.min(w, h) / strokeFactor
         context.save()
         context.translate(w / 2, gap * (i + 1))
         for (var j = 0; j < parts; j++) {
-            DrawingUtil.drawLoadingSemiCircle(context, size, ScaleUtil.divideScale(scale, j, parts))
+            DrawingUtil.drawLoadingSemiCircle(context, size, ScaleUtil.divideScale(scale, j, parts), 1 - 2 * j)
         }
         context.restore()
     }
@@ -184,6 +185,8 @@ class LCNode {
         if (dir == 1) {
             curr = this.next
         }
+        console.log(this)
+        console.log(curr)
         if (curr) {
             return curr
         }
@@ -194,12 +197,11 @@ class LCNode {
 
 class LoadingCircle {
 
-    root : LCNode = new LCNode(0)
-    curr : LCNode = this.root
+    curr : LCNode = new LCNode(0)
     dir : number = 1
 
     draw(context : CanvasRenderingContext2D) {
-        this.root.draw(context)
+        this.curr.draw(context)
     }
 
     update(cb : Function) {
