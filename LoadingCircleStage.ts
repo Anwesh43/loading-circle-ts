@@ -145,3 +145,45 @@ class Animator {
         }
     }
 }
+
+class LCNode {
+
+    state : State = new State()
+    next : LCNode
+    prev : LCNode
+
+    constructor(private i : number) {
+        this.addNeighbor()
+    }
+
+    addNeighbor() {
+        if (this.i < nodes - 1) {
+            this.next = new LCNode(this.i + 1)
+            this.next.prev = this
+        }
+    }
+
+    draw(context : CanvasRenderingContext2D) {
+        DrawingUtil.drawLCNode(context, this.i, this.state.scale)
+    }
+
+    update(cb : Function) {
+        this.state.update(cb)
+    }
+
+    startUpdating(cb : Function) {
+        this.state.startUpdating(cb)
+    }
+
+    getNext(dir : number, cb : Function) : LCNode {
+        var curr : LCNode = this.prev
+        if (dir == 1) {
+            curr = this.next
+        }
+        if (curr) {
+            return curr
+        }
+        cb()
+        return this
+    }
+}
